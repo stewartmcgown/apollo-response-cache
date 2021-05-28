@@ -11,15 +11,13 @@ import {
   GraphQLResponse,
   ValueOrPromise,
 } from 'apollo-server-types'
-
-import { CACHE_KEY_PREFIX_FQC } from '../enums'
-import { recordNodeFQCMapping } from '../utils'
-
 // XXX This should use createSHA from apollo-server-core in order to work on
 // non-Node environments. I'm not sure where that should end up ---
 // apollo-server-sha as its own tiny module? apollo-server-env seems bad because
 // that would add sha.js to unnecessary places, I think?
 import { createHash } from 'crypto'
+import { CACHE_KEY_PREFIX_FQC } from '../enums'
+import { recordNodeFQCMapping } from '../utils'
 
 interface Options<TContext = Record<string, any>> {
   // Underlying cache used to save results. All writes will be under keys that
@@ -115,19 +113,29 @@ interface ContextualCacheKey {
 }
 
 interface CacheValue {
-  // Note: we only store data responses in the cache, not errors.
-  //
-  // There are two reasons we don't cache errors. The user-level reason is that
-  // we think that in general errors are less cacheable than real results, since
-  // they might indicate something transient like a failure to talk to a
-  // backend. (If you need errors to be cacheable, represent the erroneous
-  // condition explicitly in data instead of out-of-band as an error.) The
-  // implementation reason is that this lets us avoid complexities around
-  // serialization and deserialization of GraphQL errors, and the distinction
-  // between formatted and unformatted errors, etc.
+  /**
+   * Note: we only store data responses in the cache, not errors.
+   *
+   * There are two reasons we don't cache errors. The user-level reason is that
+   * we think that in general errors are less cacheable than real results, since
+   * they might indicate something transient like a failure to talk to a
+   * backend. (If you need errors to be cacheable, represent the erroneous
+   * condition explicitly in data instead of out-of-band as an error.) The
+   * implementation reason is that this lets us avoid complexities around
+   * serialization and deserialization of GraphQL errors, and the distinction
+   * between formatted and unformatted errors, etc
+   */
   data: Record<string, any>
   cachePolicy: Required<CacheHint>
-  cacheTime: number // epoch millis, used to calculate Age header
+  /**
+   * epoch millis, used to calculate Age header
+   */
+  cacheTime: number
+
+  /**
+   * epoch millis, when the data becomes stale
+   */
+  staleAt: number
 }
 
 type CacheKey = BaseCacheKey & ContextualCacheKey
@@ -248,6 +256,7 @@ export default function plugin(
             const http = requestContext.response.http
             if (http && age !== null) {
               http.headers.set('age', age.toString())
+              http.headers.set('apollo-cache-status', 'HIT')
             }
             return
           }
@@ -298,10 +307,13 @@ export default function plugin(
               ...baseCacheKey!,
               ...contextualCacheKeyFields,
             })
+            const nowMillis = +new Date()
             const value: CacheValue = {
               data,
               cachePolicy: overallCachePolicy!,
-              cacheTime: +new Date(),
+              cacheTime: nowMillis,
+              staleAt:
+                nowMillis + (overallCachePolicy?.staleWhileRevalidate || 0),
             }
             const serializedValue = JSON.stringify(value)
             // Note that this function converts key and response to strings before
@@ -311,8 +323,13 @@ export default function plugin(
             // Also note that the test suite assumes that this asynchronous function
             // still calls `cache.set` synchronously (ie, that it writes to
             // InMemoryLRUCache synchronously).
+
             cache
-              .set(key, serializedValue, { ttl: overallCachePolicy!.maxAge })
+              .set(key, serializedValue, {
+                ttl:
+                  overallCachePolicy!.maxAge +
+                  (overallCachePolicy!.staleWhileRevalidate || 0),
+              })
               .catch(console.warn)
 
             const { __nodeFQCKeySet, __redis } = requestContext.context

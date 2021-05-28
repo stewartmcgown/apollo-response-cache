@@ -5,15 +5,13 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "daily"
+      interval: 'daily'
     reviewers:
-      - "thematters/dev"
-  - package-ecosystem: "github-actions"
-    directory: "/"
+      - 'thematters/dev'
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "daily"
-    reviewers:
-      - "thematters/dev"
+      interval: 'daily'

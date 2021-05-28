@@ -23,7 +23,7 @@ Once a mutation updates this node, `@purgeCache` will purge related `fqc`.
 Install package:
 
 ```bash
-npm i @matters/apollo-response-cache
+npm i @stewartmcgown/apollo-response-cache
 ```
 
 Add plugin and directives to the constructor:
