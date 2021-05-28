@@ -2,7 +2,7 @@
 
 ![Publish Status](https://github.com/thematters/apollo-response-cache/workflows/Publish/badge.svg) ![Test Status](https://github.com/thematters/apollo-response-cache/workflows/Test/badge.svg) [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-Caching and invalidation mechanisms (plugins, directives) of Apollo GraphQL, used by [`matters-server`](https://github.com/thematters/matters-server).
+Caching and invalidation mechanisms (plugins, directives) of Apollo GraphQL, now featuring Stale While Revalidate.
 
 [`responseCachePlugin`](./src/plugins/responseCachePlugin.ts) is forked from [`apollo-server-plugin-response-cache`](https://github.com/apollographql/apollo-server/tree/main/packages/apollo-server-plugin-response-cache).
 
