@@ -291,6 +291,15 @@ export default function plugin(
             // that this lets us avoid complexities around serialization and
             // deserialization of GraphQL errors, and the distinction between
             // formatted and unformatted errors, etc.
+            if (http) {
+              /**
+               * If we have a cache miss and no maxage, this is a dynamic read.
+               * If we have a cache DYNAMIC and no maxage, then this must be a cache bypass.
+               */
+              if (http.headers.get('apollo-cache-status') === 'MISS') {
+                http.headers.set('apollo-cache-status', 'DYNAMIC')
+              }
+            }
             return
           }
 
