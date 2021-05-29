@@ -1,6 +1,6 @@
 {
   "name": "@stewartmcgown/apollo-response-cache",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "Caching and invalidation mechanisms (plugins, directives) of Apollo GraphQL",
   "author": "Stewart McGown <stewart@mcgown.dev>",
   "license": "MIT",

@@ -101,10 +101,13 @@ export const plugin = (
         executionDidStart: () => ({
           executionDidEnd: () => setOverallCachePolicyWhenUnset(),
           willResolveField({ info }) {
+            /**
+             * Mutations are not eligible for any sort of caching, as they are analogous to a POST request
+             * in traditional HTTP verbage.
+             */
             if (
-              requestContext.operation?.name?.value
-                .toLowerCase()
-                .startsWith('mutation')
+              requestContext.operation?.operation === 'mutation' &&
+              !options.cacheMutations
             )
               return
 
@@ -306,7 +309,11 @@ function mergeHints(
       otherHint.staleWhileRevalidate !== undefined
         ? otherHint.staleWhileRevalidate
         : hint.staleWhileRevalidate, // FORK
-    scope: otherHint.scope || hint.scope,
+    scope:
+      otherHint.scope === CacheScope.Private ||
+      hint.scope === CacheScope.Private
+        ? CacheScope.Private
+        : otherHint.scope || hint.scope,
   }
 }
 

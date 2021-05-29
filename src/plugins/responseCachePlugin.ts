@@ -261,7 +261,10 @@ export default function plugin(
             }
             return
           } else if (http) {
-            http.headers.set('apollo-cache-status', 'MISS')
+            http.headers.set(
+              'apollo-cache-status',
+              !requestContext.overallCachePolicy?.maxAge ? 'DYNAMIC' : 'MISS'
+            )
           }
           if (
             options.shouldWriteToCache &&
