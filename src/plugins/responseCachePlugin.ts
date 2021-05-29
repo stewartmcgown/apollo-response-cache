@@ -185,6 +185,16 @@ export default function plugin(
             return null
           }
 
+          /**
+           * Don't bother reading the cache or doing any other operation if we have an
+           * uncachable request.
+           */
+          if (
+            !requestContext.overallCachePolicy?.maxAge &&
+            !requestContext.overallCachePolicy?.staleWhileRevalidate
+          )
+            return null
+
           async function cacheGet(
             contextualCacheKeyFields: ContextualCacheKey
           ): Promise<GraphQLResponse | null> {
