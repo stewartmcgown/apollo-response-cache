@@ -13,6 +13,10 @@ export interface CacheControlFormat {
   hints: ({ path: (string | number)[] } & CacheHint)[]
 }
 
+export enum CacheScope {
+  Public = 'PUBLIC',
+  Private = 'PRIVATE',
+}
 export interface CacheHint {
   maxAge?: number
   scope?: CacheScope
@@ -20,9 +24,19 @@ export interface CacheHint {
   staleWhileRevalidate?: number
 }
 
-export enum CacheScope {
-  Public = 'PUBLIC',
-  Private = 'PRIVATE',
+export function makeCacheHint(hint: CacheHint) {
+  const fields = []
+  if (typeof hint.maxAge === 'number') {
+    fields.push(`maxAge: ${hint.maxAge}`)
+  }
+  if (hint.scope) {
+    fields.push(`scope: ${hint.scope}`)
+  }
+  if (typeof hint.staleWhileRevalidate === 'number') {
+    fields.push(`staleWhileRevalidate: ${hint.staleWhileRevalidate}`)
+  }
+
+  return `@cacheControl(${fields.join(', ')})`
 }
 
 export interface CacheControlExtensionOptions {

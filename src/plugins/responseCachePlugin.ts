@@ -251,14 +251,17 @@ export default function plugin(
           if (!isGraphQLQuery(requestContext)) {
             return
           }
+          const http = requestContext.response.http
+
           if (requestContext.metrics.responseCacheHit) {
             // Never write back to the cache what we just read from it. But do set the Age header!
-            const http = requestContext.response.http
             if (http && age !== null) {
               http.headers.set('age', age.toString())
               http.headers.set('apollo-cache-status', 'HIT')
             }
             return
+          } else if (http) {
+            http.headers.set('apollo-cache-status', 'MISS')
           }
           if (
             options.shouldWriteToCache &&
