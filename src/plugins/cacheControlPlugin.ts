@@ -193,11 +193,9 @@ export const plugin = (
 
           // Use the override by default, but if it's not overridden, set our
           // own computation onto the `requestContext` for other plugins to read.
-          const overallCachePolicy =
-            overallCachePolicyOverride ||
-            (requestContext.overallCachePolicy = computeOverallCachePolicy(
-              hints
-            ))
+          const overallCachePolicy = (requestContext.overallCachePolicy = computeOverallCachePolicy(
+            hints
+          ))
 
           if (
             overallCachePolicy &&
