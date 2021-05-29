@@ -1,6 +1,8 @@
 import { LogCacheDirective } from './directives/logCache'
 import { PurgeCacheDirective } from './directives/purgeCache'
 import {
+  CacheHint,
+  CacheScope,
   makeCacheHint,
   plugin as cacheControlPlugin,
 } from './plugins/cacheControlPlugin'
@@ -13,4 +15,6 @@ export {
   invalidateFQC,
   cacheControlPlugin,
   makeCacheHint,
+  CacheScope,
+  CacheHint,
 }
