@@ -87,6 +87,8 @@ export const plugin = (
   return {
     requestDidStart(requestContext) {
       const defaultMaxAge: number = options.defaultMaxAge || 0
+      const defaultStaleWhileRevalidate: number =
+        options.defaultStaleWhileRevalidate || 0
       const hints: MapResponsePathHints = new Map()
 
       function setOverallCachePolicyWhenUnset() {
@@ -142,12 +144,17 @@ export const plugin = (
             // doesn't exist then there's no parent field that would assign the
             // default maxAge, so we do it here.)
             if (
-              (targetType instanceof GraphQLObjectType ||
-                targetType instanceof GraphQLInterfaceType ||
-                !info.path.prev) &&
-              hint.maxAge === undefined
+              targetType instanceof GraphQLObjectType ||
+              targetType instanceof GraphQLInterfaceType ||
+              !info.path.prev
             ) {
-              hint.maxAge = defaultMaxAge
+              if (hint.maxAge === undefined) {
+                hint.maxAge = defaultMaxAge
+              }
+
+              if (hint.staleWhileRevalidate === undefined) {
+                hint.staleWhileRevalidate = defaultStaleWhileRevalidate
+              }
             }
 
             if (hint.maxAge !== undefined || hint.scope !== undefined) {
