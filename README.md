@@ -33,7 +33,7 @@ import {
   responseCachePlugin,
   LogCacheDirective,
   PurgeCacheDirective,
-} from '@matters/apollo-response-cache'
+} from '@stewartmcgown/apollo-response-cache'
 
 const server = new ApolloServer({
   plugins: [responseCachePlugin()],
@@ -127,6 +127,10 @@ const schema = makeExecutableSchema({
   },
 })
 ```
+
+#### Mutations
+
+Caching is disabled for Mutations by default.
 
 ### TODOs
 

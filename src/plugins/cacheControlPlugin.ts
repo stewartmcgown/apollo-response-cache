@@ -61,6 +61,13 @@ export interface CacheControlExtensionOptions {
   calculateHttpHeaders?: boolean
 
   stripFormattedExtensions?: boolean
+
+  /**
+   * Cache mutation responses using cacheControl hints
+   *
+   * @default false
+   */
+  cacheMutations?: boolean
 }
 
 type MapResponsePathHints = Map<ResponsePath, CacheHint>
@@ -92,6 +99,13 @@ export const plugin = (
         executionDidStart: () => ({
           executionDidEnd: () => setOverallCachePolicyWhenUnset(),
           willResolveField({ info }) {
+            if (
+              requestContext.operation?.name?.value
+                .toLowerCase()
+                .startsWith('mutation')
+            )
+              return
+
             let hint: CacheHint = {}
 
             // If this field's resolver returns an object or interface, look for
