@@ -19,7 +19,7 @@ export enum CacheScope {
 }
 export interface CacheHint {
   maxAge?: number
-  scope?: CacheScope
+  scope?: keyof typeof CacheScope
   // FORK: Added this directive field!
   staleWhileRevalidate?: number
 }

@@ -1,6 +1,6 @@
 {
   "name": "@stewartmcgown/apollo-response-cache",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Caching and invalidation mechanisms (plugins, directives) of Apollo GraphQL",
   "author": "Stewart McGown <stewart@mcgown.dev>",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "build": "rimraf dist/**/* && tsc",
     "format": "prettier --write \"src/**/*.{ts,tsx,json}\"",
     "lint": "eslint . --ext .ts,.tsx",
-    "release": "npm version minor && npm run build && npm publish --access public"
+    "release": "npm run build && npm publish --access public"
   },
   "repository": {
     "type": "git",
