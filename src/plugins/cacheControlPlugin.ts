@@ -204,6 +204,10 @@ export const plugin = (
             options.calculateHttpHeaders &&
             response.http
           ) {
+            /**
+             * We want to set a cache header even if the response is technically
+             * uncachable.
+             */
             if (overallCachePolicy.staleWhileRevalidate) {
               // FORK
               response.http.headers.set(
@@ -363,13 +367,14 @@ function computeOverallCachePolicy(
 
   // If maxAge is 0, then we consider it uncacheable so it doesn't matter what
   // the scope was.
-  return lowestMaxAge && lowestMaxAgePlusSWR // FORK
-    ? {
-        maxAge: lowestMaxAge,
-        staleWhileRevalidate: lowestMaxAgePlusSWR - lowestMaxAge, // FORK
-        scope,
-      }
-    : undefined
+  return {
+    maxAge: lowestMaxAge || 0,
+    staleWhileRevalidate:
+      lowestMaxAgePlusSWR && lowestMaxAge
+        ? lowestMaxAgePlusSWR - lowestMaxAge
+        : 0, // FORK
+    scope,
+  }
 }
 
 function addHint(
