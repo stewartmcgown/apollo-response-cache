@@ -313,11 +313,7 @@ function mergeHints(
       otherHint.staleWhileRevalidate !== undefined
         ? otherHint.staleWhileRevalidate
         : hint.staleWhileRevalidate, // FORK
-    scope:
-      otherHint.scope === CacheScope.Private ||
-      hint.scope === CacheScope.Private
-        ? CacheScope.Private
-        : otherHint.scope || hint.scope,
+    scope: otherHint.scope || hint.scope,
   }
 }
 
