@@ -185,16 +185,6 @@ export default function plugin(
             return null
           }
 
-          /**
-           * Don't bother reading the cache or doing any other operation if we have an
-           * uncachable request.
-           */
-          if (
-            !requestContext.overallCachePolicy?.maxAge &&
-            !requestContext.overallCachePolicy?.staleWhileRevalidate
-          )
-            return null
-
           async function cacheGet(
             contextualCacheKeyFields: ContextualCacheKey
           ): Promise<GraphQLResponse | null> {
@@ -232,6 +222,16 @@ export default function plugin(
             variables: { ...(requestContext.request.variables || {}) },
             extra: extraCacheKeyData,
           }
+
+          /**
+           * Don't bother reading the cache or doing any other operation if we have an
+           * uncachable request.
+           */
+          if (
+            !requestContext.overallCachePolicy?.maxAge &&
+            !requestContext.overallCachePolicy?.staleWhileRevalidate
+          )
+            return null
 
           // Note that we set up sessionId and baseCacheKey before doing this
           // check, so that we can still write the result to the cache even if
