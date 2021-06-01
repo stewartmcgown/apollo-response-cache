@@ -18,6 +18,7 @@ import {
 import { createHash } from 'crypto'
 import { CACHE_KEY_PREFIX_FQC } from '../enums'
 import { recordNodeFQCMapping } from '../utils'
+import { makeCacheControlHeader } from './cacheControlPlugin'
 
 interface Options<TContext = Record<string, any>> {
   // Underlying cache used to save results. All writes will be under keys that
@@ -223,16 +224,6 @@ export default function plugin(
             extra: extraCacheKeyData,
           }
 
-          /**
-           * Don't bother reading the cache or doing any other operation if we have an
-           * uncachable request.
-           */
-          if (
-            !requestContext.overallCachePolicy?.maxAge &&
-            !requestContext.overallCachePolicy?.staleWhileRevalidate
-          )
-            return null
-
           // Note that we set up sessionId and baseCacheKey before doing this
           // check, so that we can still write the result to the cache even if
           // we are told not to read from the cache.
@@ -268,6 +259,11 @@ export default function plugin(
             if (http && age !== null) {
               http.headers.set('age', age.toString())
               http.headers.set('apollo-cache-status', 'HIT')
+              if (requestContext.overallCachePolicy)
+                http.headers.set(
+                  'Cache-Control',
+                  makeCacheControlHeader(requestContext.overallCachePolicy)
+                )
             }
             return
           } else if (http) {

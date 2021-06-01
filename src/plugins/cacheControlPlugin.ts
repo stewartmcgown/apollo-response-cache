@@ -39,6 +39,17 @@ export function makeCacheHint(hint: CacheHint) {
   return `@cacheControl(${fields.join(', ')})`
 }
 
+export function makeCacheControlHeader(
+  overallCachePolicy: Required<CacheHint>
+) {
+  const swr = overallCachePolicy.staleWhileRevalidate
+    ? `stale-while-revalidate=${overallCachePolicy.staleWhileRevalidate}, `
+    : ''
+  return `max-age=${
+    overallCachePolicy.maxAge
+  }, ${swr}${overallCachePolicy.scope.toLowerCase()}`
+}
+
 export interface CacheControlExtensionOptions {
   /**
    * Apply this maxAge to every object in the schema automatically. You can override
@@ -206,22 +217,10 @@ export const plugin = (
              * We want to set a cache header even if the response is technically
              * uncachable.
              */
-            if (overallCachePolicy.staleWhileRevalidate) {
-              // FORK
-              response.http.headers.set(
-                'Cache-Control',
-                `max-age=${overallCachePolicy.maxAge}, stale-while-revalidate=${
-                  overallCachePolicy.staleWhileRevalidate
-                }, ${overallCachePolicy.scope.toLowerCase()}`
-              )
-            } else {
-              response.http.headers.set(
-                'Cache-Control',
-                `max-age=${
-                  overallCachePolicy.maxAge
-                }, ${overallCachePolicy.scope.toLowerCase()}`
-              )
-            }
+            response.http.headers.set(
+              'Cache-Control',
+              makeCacheControlHeader(overallCachePolicy)
+            )
           }
 
           // We should have to explicitly ask to leave the formatted extension in,
