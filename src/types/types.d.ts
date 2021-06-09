@@ -1,4 +1,4 @@
-import 'apollo-cache-control'
+import 'apollo-cache-control';
 
 declare module 'apollo-cache-control' {
   export interface CacheHint {

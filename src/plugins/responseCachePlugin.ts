@@ -4,12 +4,12 @@ import { CacheHint, CacheScope } from 'apollo-cache-control'
 import { KeyValueCache, PrefixingKeyValueCache } from 'apollo-server-caching'
 import {
   ApolloServerPlugin,
-  GraphQLRequestListener,
+  GraphQLRequestListener
 } from 'apollo-server-plugin-base'
 import {
   GraphQLRequestContext,
   GraphQLResponse,
-  ValueOrPromise,
+  ValueOrPromise
 } from 'apollo-server-types'
 // XXX This should use createSHA from apollo-server-core in order to work on
 // non-Node environments. I'm not sure where that should end up ---
@@ -19,6 +19,7 @@ import { createHash } from 'crypto'
 import { CACHE_KEY_PREFIX_FQC } from '../enums'
 import { recordNodeFQCMapping } from '../utils'
 import { makeCacheControlHeader } from './cacheControlPlugin'
+
 
 interface Options<TContext = Record<string, any>> {
   // Underlying cache used to save results. All writes will be under keys that
@@ -166,6 +167,8 @@ export default function plugin(
       let sessionId: string | null = null
       let baseCacheKey: BaseCacheKey | null = null
       let age: number | null = null
+      let stale = false
+      let cachePolicy: Required<CacheHint> | null = null;
 
       return {
         async responseForOperation(
@@ -201,10 +204,21 @@ export default function plugin(
             const value: CacheValue = JSON.parse(serializedValue)
             // Use cache policy from the cache (eg, to calculate HTTP response
             // headers).
-            if (value.cachePolicy.maxAge)
+            if (typeof value.cachePolicy.maxAge !== 'undefined') {
               requestContext.overallCachePolicy = value.cachePolicy
-            requestContext.metrics.responseCacheHit = true
+              cachePolicy = value.cachePolicy;
+            }
+
             age = Math.round((+new Date() - value.cacheTime) / 1000)
+
+            if (value.cachePolicy.staleWhileRevalidate) {
+              if (age > value.cachePolicy.maxAge) {
+                // Value is stale
+                stale = true;
+              }
+            }
+
+            requestContext.metrics.responseCacheHit = true
             return { data: value.data }
           }
 
@@ -259,11 +273,11 @@ export default function plugin(
             // Never write back to the cache what we just read from it. But do set the Age header!
             if (http && age !== null) {
               http.headers.set('age', age.toString())
-              http.headers.set('apollo-cache-status', 'HIT')
-              if (requestContext.overallCachePolicy)
+              http.headers.set('apollo-cache-status', stale ? 'STALE' : 'HIT')
+              if (cachePolicy)
                 http.headers.set(
                   'Cache-Control',
-                  makeCacheControlHeader(requestContext.overallCachePolicy)
+                  makeCacheControlHeader(cachePolicy)
                 )
             }
             return

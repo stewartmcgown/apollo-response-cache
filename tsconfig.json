@@ -7,7 +7,8 @@
     "declaration": true,
     "outDir": "dist",
     "esModuleInterop": true,
-    "typeRoots": ["./src/types"]
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "types": ["jest"]
   },
   "exclude": ["dist", "node_modules"]
 }

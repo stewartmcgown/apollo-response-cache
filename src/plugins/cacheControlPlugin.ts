@@ -5,7 +5,7 @@ import {
   GraphQLInterfaceType,
   GraphQLObjectType,
   ResponsePath,
-  responsePathAsArray,
+  responsePathAsArray
 } from 'graphql'
 
 export interface CacheControlFormat {
@@ -207,6 +207,7 @@ export const plugin = (
           const overallCachePolicy = (requestContext.overallCachePolicy = computeOverallCachePolicy(
             hints
           ))
+
 
           if (
             overallCachePolicy &&
