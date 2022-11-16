@@ -1818,14 +1818,6 @@ anymatch@^3.0.3:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-apollo-cache-control@^0.11.1:
-  version "0.11.6"
-  resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.11.6.tgz#f7bdf924272af47ac474cf3f3f35cfc038cc9485"
-  integrity sha512-YZ+uuIG+fPy+mkpBS2qKF0v1qlzZ3PW6xZVaDukeK3ed3iAs4L/2YnkTqau3OmoF/VPzX2FmSkocX/OVd59YSw==
-  dependencies:
-    apollo-server-env "^3.0.0"
-    apollo-server-plugin-base "^0.10.4"
-
 apollo-cache-control@^0.14.0:
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.14.0.tgz#95f20c3e03e7994e0d1bd48c59aeaeb575ed0ce7"
@@ -1833,6 +1825,14 @@ apollo-cache-control@^0.14.0:
   dependencies:
     apollo-server-env "^3.1.0"
     apollo-server-plugin-base "^0.13.0"
+
+apollo-cache-control@^0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.15.0.tgz#45897ed318b883bf964960e6fcd7516a50b4e4d4"
+  integrity sha512-U2uYvHZsWmR6s6CD5zlq3PepfbUAM8953CeVM2Y2QYMtJ8i4CYplEPbIWb3zTIXSPbIPeWGddM56pChI6Iz3zA==
+  dependencies:
+    apollo-server-env "^3.2.0"
+    apollo-server-plugin-base "^0.14.0"
 
 apollo-cache-control@^0.8.3:
   version "0.8.11"
@@ -2030,10 +2030,10 @@ apollo-server-env@^2.4.3, apollo-server-env@^2.4.5:
     node-fetch "^2.1.2"
     util.promisify "^1.0.0"
 
-apollo-server-env@^3.0.0, apollo-server-env@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/apollo-server-env/-/apollo-server-env-3.1.0.tgz#0733c2ef50aea596cc90cf40a53f6ea2ad402cd0"
-  integrity sha512-iGdZgEOAuVop3vb0F2J3+kaBVi4caMoxefHosxmgzAbbSpvWehB8Y1QiSyyMeouYC38XNVk5wnZl+jdGSsWsIQ==
+apollo-server-env@^3.0.0, apollo-server-env@^3.1.0, apollo-server-env@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-env/-/apollo-server-env-3.2.0.tgz#0572e307da4784c5d7633a0ade1f45e231da28e3"
+  integrity sha512-V+kO5e6vUo2JwqV1/Ng71ZE3J6x1hCOC+nID2/++bCYl0/fPY9iLChbBNSgN/uoFcjhgmBchOv+m4o0Nie/TFQ==
   dependencies:
     node-fetch "^2.6.1"
     util.promisify "^1.0.0"
@@ -2066,19 +2066,19 @@ apollo-server-express@^2.25.0:
     subscriptions-transport-ws "^0.9.16"
     type-is "^1.6.16"
 
-apollo-server-plugin-base@^0.10.4:
-  version "0.10.4"
-  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-0.10.4.tgz#fbf73f64f95537ca9f9639dd7c535eb5eeb95dcd"
-  integrity sha512-HRhbyHgHFTLP0ImubQObYhSgpmVH4Rk1BinnceZmwudIVLKrqayIVOELdyext/QnSmmzg5W7vF3NLGBcVGMqDg==
-  dependencies:
-    apollo-server-types "^0.6.3"
-
 apollo-server-plugin-base@^0.13.0:
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-0.13.0.tgz#3f85751a420d3c4625355b6cb3fbdd2acbe71f13"
   integrity sha512-L3TMmq2YE6BU6I4Tmgygmd0W55L+6XfD9137k+cWEBFu50vRY4Re+d+fL5WuPkk5xSPKd/PIaqzidu5V/zz8Kg==
   dependencies:
     apollo-server-types "^0.9.0"
+
+apollo-server-plugin-base@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-plugin-base/-/apollo-server-plugin-base-0.14.0.tgz#f59b6ab7780304162d2e4fd9ee29ed0696b174ef"
+  integrity sha512-nTNSFuBhZURGjtWptdVqwemYUOdsvABj/GSKzeNvepiEubiv4N0rt4Gvy1inHDiMbo98wQTdF/7XohNcB9A77g==
+  dependencies:
+    apollo-server-types "^0.10.0"
 
 apollo-server-plugin-base@^0.6.3:
   version "0.6.10"
@@ -2100,6 +2100,15 @@ apollo-server-testing@^2.9.2:
   integrity sha512-PfbcRka9+mpS33d9len80KlCpBPh6wyoZSwZvxZeEcVGjfqo7/7TePr0q9ZmpKMTK/6jZ7JP6QHGyYQNhwOtHQ==
   dependencies:
     apollo-server-core "^2.25.0"
+
+apollo-server-types@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/apollo-server-types/-/apollo-server-types-0.10.0.tgz#af578bf507151a0e86fbdf188f9673ece3f8f164"
+  integrity sha512-LsB3epw1X3Co/HGiKHCGtzWG35J59gG8Ypx0p22+wgdM9AVDm1ylsNGZy+osNIVJc1lUJf3nF5kZ90vA866K/w==
+  dependencies:
+    apollo-reporting-protobuf "^0.8.0"
+    apollo-server-caching "^0.7.0"
+    apollo-server-env "^3.2.0"
 
 apollo-server-types@^0.2.10, apollo-server-types@^0.2.3:
   version "0.2.10"
